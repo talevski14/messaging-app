@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup</title>
+</head>
+<body>
+<form method="post" action="/signup">
+    <label for="fullName">Full name</label><input type="text" id="fullName" name="fullName">
+    <label for="username">Username</label><input type="text" id="username" name="username">
+    <label for="password">Password</label><input type="password" id="password" name="password">
+    <label for="repeatPassword">Repeat password</label><input type="password" id="repeatPassword" name="repeatPassword">
+    <button type="submit">Sign up</button>
+</form>
+<p th:text="${error}"></p>
+</body>
+</html>
