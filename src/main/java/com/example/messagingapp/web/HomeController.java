@@ -29,7 +29,7 @@ public class HomeController {
         String username = (String) request.getSession().getAttribute("user");
         User user;
         try {
-            user = userService.findUser(username);
+            user = userService.findCurrentUser(username);
         } catch (UserNotLoggedInException | UserDoesntExistException exception) {
             model.addAttribute("error", exception.getMessage());
             return "errorPage";

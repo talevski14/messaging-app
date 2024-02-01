@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUser(String username) {
+    public User findCurrentUser(String username) {
         if(username==null || username.isEmpty()) {
             throw new UserNotLoggedInException();
         }
@@ -60,10 +60,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsersById(String username) {
+    public List<User> findAllUsersById(String username, User user) {
         if(username==null || username.isEmpty()) {
             throw new InvalidArgumentsException();
         }
-        return userRepository.findAllByUsernameContainsIgnoreCase(username);
+        return userRepository.findAllByUsernameContainingIgnoreCaseAndFriendsNotContainsAndFriendRequestsNotContains(username, user, user);
+    }
+
+    @Override
+    public User findUser(String username) {
+        if(username==null || username.isEmpty()) {
+            throw new InvalidArgumentsException();
+        }
+        return userRepository.findById(username).orElseThrow(UserDoesntExistException::new);
+    }
+
+    @Override
+    public void sendFriendRequest(User sender, User receiver) {
+        receiver.getFriendRequests().add(sender);
+        userRepository.save(receiver);
+    }
+
+    @Override
+    public void declineRequest(User currentUser, String username) {
+        User user = findUser(username);
+        currentUser.getFriendRequests().remove(user);
+        userRepository.save(currentUser);
+    }
+
+    @Override
+    public void acceptRequest(User currentUser, String username) {
+        User user = findUser(username);
+        currentUser.getFriendRequests().remove(user);
+        currentUser.getFriends().add(user);
+        user.getFriends().add(currentUser);
+        userRepository.save(currentUser);
+        userRepository.save(user);
     }
 }

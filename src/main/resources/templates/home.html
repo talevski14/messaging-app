@@ -8,8 +8,9 @@
 </head>
 <body>
 <a href="/find-friends">Find friends</a>
+<p th:text="${session.get('user')}"></p>
 
-<div th:if="${friendRequests == null}">
+<div th:unless="${friendRequests.isEmpty()}">
     <ul role="list" class="divide-y divide-gray-100" th:each="friendR: ${friendRequests}">
         <li class="flex justify-between gap-x-6 py-5">
             <div class="flex min-w-0 gap-x-4">
@@ -17,16 +18,22 @@
                     <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${friendR?.getFullName()}"></p>
                     <p class="mt-1 truncate text-xs leading-5 text-gray-500" th:text="${friendR?.getUsername()}"></p>
                 </div>
+                <form method="post" th:action="@{'/accept/{id}' (id = ${friendR.getUsername()})}">
+                    <button type="submit">Accept</button>
+                </form>
+                <form method="post" th:action="@{'/decline/{id}' (id = ${friendR.getUsername()})}">
+                    <button type="submit">Decline</button>
+                </form>
             </div>
         </li>
     </ul>
 </div>
 
-<div th:unless="${friendRequests == null}">
+<div th:if="${friendRequests.isEmpty()}">
     <p>No pending friend requests.</p>
 </div>
 
-<div th:if="${friends == null}">
+<div th:unless="${friends.isEmpty()}">
 <ul role="list" class="divide-y divide-gray-100" th:each="friend: ${friends}">
     <li class="flex justify-between gap-x-6 py-5">
         <div class="flex min-w-0 gap-x-4">
@@ -39,7 +46,7 @@
 </ul>
 </div>
 
-<div th:unless="${friends == null}">
+<div th:if="${friends.isEmpty()}">
     <p>No current friends. Try searching for them <a href="/find-friends">here!</a></p>
 </div>
 
