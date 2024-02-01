@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com/?plugins=forms"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<a href="/find-friends">Find friends</a>
+
+<div th:if="${friendRequests == null}">
+    <ul role="list" class="divide-y divide-gray-100" th:each="friendR: ${friendRequests}">
+        <li class="flex justify-between gap-x-6 py-5">
+            <div class="flex min-w-0 gap-x-4">
+                <div class="min-w-0 flex-auto">
+                    <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${friendR?.getFullName()}"></p>
+                    <p class="mt-1 truncate text-xs leading-5 text-gray-500" th:text="${friendR?.getUsername()}"></p>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div th:unless="${friendRequests == null}">
+    <p>No pending friend requests.</p>
+</div>
+
+<div th:if="${friends == null}">
+<ul role="list" class="divide-y divide-gray-100" th:each="friend: ${friends}">
+    <li class="flex justify-between gap-x-6 py-5">
+        <div class="flex min-w-0 gap-x-4">
+            <div class="min-w-0 flex-auto">
+                <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${friend?.getFullName()}"></p>
+                <p class="mt-1 truncate text-xs leading-5 text-gray-500" th:text="${friend?.getUsername()}"></p>
+            </div>
+        </div>
+    </li>
+</ul>
+</div>
+
+<div th:unless="${friends == null}">
+    <p>No current friends. Try searching for them <a href="/find-friends">here!</a></p>
+</div>
+
+</body>
+</html>
