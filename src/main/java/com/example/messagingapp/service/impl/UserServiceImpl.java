@@ -6,6 +6,7 @@ import com.example.messagingapp.repository.UserRepository;
 import com.example.messagingapp.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -48,5 +49,21 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public User findUser(String username) {
+        if(username==null || username.isEmpty()) {
+            throw new UserNotLoggedInException();
+        }
+        return userRepository.findById(username).orElseThrow(UserDoesntExistException::new);
+    }
+
+    @Override
+    public List<User> findAllUsersById(String username) {
+        if(username==null || username.isEmpty()) {
+            throw new InvalidArgumentsException();
+        }
+        return userRepository.findAllByUsernameContainsIgnoreCase(username);
     }
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,12 +17,15 @@ public class User {
     private String password;
     @ManyToMany
     private List<User> friends;
+    @ManyToMany
+    private List<User> friendRequests;
 
     public User(String fullName, String username, String password) {
         this.fullName = fullName;
         this.username = username;
         this.password = password;
-        this.friends = null;
+        this.friends = new ArrayList<>();
+        this.friendRequests = new ArrayList<>();
     }
 
     public User() {
@@ -58,5 +62,13 @@ public class User {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public List<User> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(List<User> friendRequests) {
+        this.friendRequests = friendRequests;
     }
 }
