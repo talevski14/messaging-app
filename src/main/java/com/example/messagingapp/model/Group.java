@@ -16,12 +16,15 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @OneToMany
+    private List<Message> messages;
 
     public Group(String name, User creator) {
         this.name = name;
         this.creator = creator;
         this.members = new ArrayList<>();
         this.members.add(creator);
+        this.messages = new ArrayList<>();
     }
 
     public Group() {
@@ -58,5 +61,13 @@ public class Group {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

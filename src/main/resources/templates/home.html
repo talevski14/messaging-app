@@ -9,6 +9,7 @@
 <body>
 <a href="/find-friends">Find friends</a>
 <p th:text="${session.get('user')}"></p>
+<a href="/logout">Log out</a>
 
 <div th:unless="${friendRequests.isEmpty()}">
     <ul role="list" class="divide-y divide-gray-100" th:each="friendR: ${friendRequests}">
@@ -33,20 +34,20 @@
     <p>No pending friend requests.</p>
 </div>
 
-<div th:unless="${friends.isEmpty()}">
-<ul role="list" class="divide-y divide-gray-100" th:each="friend: ${friends}">
+<div th:unless="${chats.isEmpty()}">
+<ul role="list" class="divide-y divide-gray-100" th:each="chat: ${chats}">
     <li class="flex justify-between gap-x-6 py-5">
         <div class="flex min-w-0 gap-x-4">
             <div class="min-w-0 flex-auto">
-                <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${friend?.getFullName()}"></p>
-                <p class="mt-1 truncate text-xs leading-5 text-gray-500" th:text="${friend?.getUsername()}"></p>
+                <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${chat.getUser1().getUsername() == session.get('user') ? chat.getUser2().getUsername() : chat.getUser1().getUsername()}"></p>
             </div>
+            <a th:href="@{'/chat/{id}' (id = ${chat.getId()})}">Open chat</a>
         </div>
     </li>
 </ul>
 </div>
 
-<div th:if="${friends.isEmpty()}">
+<div th:if="${chats.isEmpty()}">
     <p>No current friends. Try searching for them <a href="/find-friends">here!</a></p>
 </div>
 
