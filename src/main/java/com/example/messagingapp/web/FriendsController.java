@@ -1,9 +1,7 @@
 package com.example.messagingapp.web;
 
 import com.example.messagingapp.model.User;
-import com.example.messagingapp.model.exceptions.InvalidArgumentsException;
-import com.example.messagingapp.model.exceptions.UserDoesntExistException;
-import com.example.messagingapp.model.exceptions.UserNotLoggedInException;
+import com.example.messagingapp.model.exceptions.*;
 import com.example.messagingapp.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -26,19 +24,9 @@ public class FriendsController {
 
     @GetMapping({"/find-friends"})
     public String getFindFriendsPage(Model model, HttpServletRequest request, @RequestParam(required = false) String username) {
-        List<User> users = null;
-
-        String usernameCurr = (String) request.getSession().getAttribute("user");
-        User currentUser;
+        List<User> users;
         try {
-            currentUser = userService.findCurrentUser(usernameCurr);
-        } catch (UserNotLoggedInException | UserDoesntExistException exception) {
-            model.addAttribute("error", exception.getMessage());
-            return "errorPage";
-        }
-
-        try {
-            users = userService.findAllUsersById(username, currentUser);
+            users = userService.findAllUsersById(username);
         } catch (InvalidArgumentsException exception) {
             model.addAttribute("error", exception.getMessage());
             return "findFriends";
@@ -67,7 +55,13 @@ public class FriendsController {
             return "errorPage";
         }
 
-        userService.sendFriendRequest(currentUser, user);
+        try {
+            userService.sendFriendRequest(currentUser, user);
+        } catch (AlreadyFriendsException | FriendRequestReceiverException | FriendRequestSenderException exception) {
+            model.addAttribute("error", exception.getMessage());
+            return "errorPage";
+        }
+
         return "redirect:/home";
     }
 

@@ -4,6 +4,7 @@ import com.example.messagingapp.model.User;
 import com.example.messagingapp.model.exceptions.*;
 import com.example.messagingapp.repository.UserRepository;
 import com.example.messagingapp.service.UserService;
+import com.sun.jdi.InvalidStackFrameException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,11 +61,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsersById(String username, User user) {
+    public List<User> findAllUsersById(String username) {
         if(username==null || username.isEmpty()) {
             throw new InvalidArgumentsException();
         }
-        return userRepository.findAllByUsernameContainingIgnoreCaseAndFriendsNotContainsAndFriendRequestsNotContains(username, user, user);
+        return userRepository.findAllByUsernameContainsIgnoreCase(username);
     }
 
     @Override
@@ -77,6 +78,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendFriendRequest(User sender, User receiver) {
+        if(sender.getFriendRequests().contains(receiver)) {
+            throw new FriendRequestSenderException();
+        }
+
+        if(receiver.getFriendRequests().contains(sender)) {
+            throw new FriendRequestReceiverException();
+        }
+
+        if(sender.getFriends().contains(receiver)) {
+            throw new AlreadyFriendsException();
+        }
+
         receiver.getFriendRequests().add(sender);
         userRepository.save(receiver);
     }

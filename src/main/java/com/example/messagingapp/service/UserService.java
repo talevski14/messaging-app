@@ -8,7 +8,7 @@ public interface UserService {
     public User createUser(String fullName, String username, String password, String repeatPassword);
     public User logIn(String username, String password);
     public User findCurrentUser(String username);
-    public List<User> findAllUsersById(String username, User user);
+    public List<User> findAllUsersById(String username);
     public User findUser(String username);
     public void sendFriendRequest(User sender, User receiver);
 
