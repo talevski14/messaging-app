@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find Friends</title>
+</head>
+<body>
+<form>
+  <label for="username">Enter username</label><input type="text" id="username" name="username"><br>
+  <button type="submit">Search</button>
+</form>
+<div th:if="${users != null}">
+  <ul role="list" class="divide-y divide-gray-100" th:each="user: ${users}">
+    <li class="flex justify-between gap-x-6 py-5">
+      <div class="flex min-w-0 gap-x-4">
+        <div class="min-w-0 flex-auto">
+          <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${user?.getFullName()}"></p>
+          <p class="mt-1 truncate text-xs leading-5 text-gray-500" th:text="${user?.getUsername()}"></p>
+        </div>
+        <form method="post" th:action="@{'/send-request/{id}' (id = ${user?.getUsername()})}">
+          <button type="submit">Send friend request</button>
+        </form>
+      </div>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
