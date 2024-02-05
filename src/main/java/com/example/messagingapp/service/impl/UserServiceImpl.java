@@ -64,11 +64,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsersById(String username) {
+    public List<User> findAllUsersById(String username, String currUsername) {
         if(username==null || username.isEmpty()) {
             throw new InvalidArgumentsException();
         }
-        return userRepository.findAllByUsernameContainsIgnoreCase(username);
+        List<User> users = userRepository.findAllByUsernameContainsIgnoreCase(username);
+        User currUser = this.findCurrentUser(currUsername);
+
+        return users.stream()
+                .filter(i -> !i.equals(currUser))
+                .toList();
     }
 
     @Override
