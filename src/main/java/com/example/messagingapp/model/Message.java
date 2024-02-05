@@ -12,11 +12,20 @@ public class Message {
     private String body;
     private LocalDateTime timeSent;
     @ManyToOne
-    private User user;
+    private User sender;
 
-    public Message(String body, LocalDateTime timeSent) {
+    public Message(String body, LocalDateTime timeSent, User sender) {
         this.body = body;
         this.timeSent = timeSent;
+        this.sender = sender;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
     }
 
     public Message() {

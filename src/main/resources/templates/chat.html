@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+</head>
+<body>
+<input type="hidden" id="username" name="username" th:value="${session.get('user')}">
+<form method="post" th:action="@{'/chat/{id}' (id = ${chatID})}">
+  <input id="message" name="message" type="text" placeholder="Write your message here...">
+  <button id="send" type="submit">Send</button>
+</form>
+<div class="row">
+    <div class="col-md-12">
+        <table id="conversation" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Sender</th>
+                <th>Message</th>
+                <th>Timestamp</th>
+            </tr>
+            </thead>
+            <tbody id="messages">
+            <tr th:each="messageChat: ${messagesChat}">
+                <td th:text="${messageChat.getSender().getUsername()}"></td>
+                <td th:text="${messageChat.getBody()}"></td>
+                <td th:text="${messageChat.getTimeSent()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script src="/app.js"></script>
+</html>
