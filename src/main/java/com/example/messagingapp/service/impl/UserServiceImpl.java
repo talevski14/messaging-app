@@ -1,10 +1,11 @@
 package com.example.messagingapp.service.impl;
 
+import com.example.messagingapp.model.Chat;
 import com.example.messagingapp.model.User;
 import com.example.messagingapp.model.exceptions.*;
+import com.example.messagingapp.repository.ChatRepository;
 import com.example.messagingapp.repository.UserRepository;
 import com.example.messagingapp.service.UserService;
-import com.sun.jdi.InvalidStackFrameException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +14,11 @@ import java.util.Objects;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final ChatRepository chatRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository) {
         this.userRepository = userRepository;
+        this.chatRepository = chatRepository;
     }
 
     @Override
@@ -109,5 +112,7 @@ public class UserServiceImpl implements UserService {
         user.getFriends().add(currentUser);
         userRepository.save(currentUser);
         userRepository.save(user);
+        Chat chat = new Chat(currentUser, user);
+        chatRepository.save(chat);
     }
 }

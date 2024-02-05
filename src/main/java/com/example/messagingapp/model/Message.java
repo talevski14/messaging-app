@@ -9,27 +9,23 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @ManyToOne
-    private User sender;
-    @ManyToOne
-    private User receiver;
-    @ManyToOne
-    private Group group;
     private String body;
     private LocalDateTime timeSent;
+    @ManyToOne
+    private User sender;
 
-    public Message(User sender, User receiver, String body, LocalDateTime timeSent) {
-        this.sender = sender;
-        this.receiver = receiver;
+    public Message(String body, LocalDateTime timeSent, User sender) {
         this.body = body;
         this.timeSent = timeSent;
+        this.sender = sender;
     }
 
-    public Message(User sender, Group group, String body, LocalDateTime timeSent) {
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
         this.sender = sender;
-        this.group = group;
-        this.body = body;
-        this.timeSent = timeSent;
     }
 
     public Message() {
@@ -42,30 +38,6 @@ public class Message {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
     }
 
     public String getBody() {

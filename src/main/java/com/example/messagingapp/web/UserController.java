@@ -60,4 +60,10 @@ public class UserController {
         }
         return "redirect:/login";
     }
+
+    @GetMapping({"/logout"})
+    public String logOut(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/login";
+    }
 }
