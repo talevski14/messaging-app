@@ -26,7 +26,7 @@ public class FriendsController {
     public String getFindFriendsPage(Model model, HttpServletRequest request, @RequestParam(required = false) String username) {
         List<User> users;
         try {
-            users = userService.findAllUsersById(username);
+            users = userService.findAllUsersById(username, (String) request.getSession().getAttribute("user"));
         } catch (InvalidArgumentsException exception) {
             model.addAttribute("error", exception.getMessage());
             return "findFriends";
