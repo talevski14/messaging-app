@@ -43,36 +43,16 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat getChat(String id) {
+        if(id == null || id.isEmpty()) {
+            throw new InvalidArgumentsException();
+        }
         return chatRepository.findById(id).orElseThrow(ChatDoesntExistException::new);
-    }
-
-    @Override
-    public void saveMessageInChat(Message message, String id) {
-        messageRepository.save(message);
-        Chat chat = this.getChat(id);
-        chat.getMessages().add(message);
-        chatRepository.save(chat);
     }
 
     @Override
     public List<Chat> findGroupsByUser(User user) {
         return chatRepository.findAllByMembersContaining(user).stream()
                 .filter(Chat::getGroup)
-                .toList();
-    }
-
-    @Override
-    public List<User> getFriendsNotInChat(User curentUser, String chatId) {
-        Chat chat = this.getChat(chatId);
-        List<User> userFriends = curentUser.getFriends();
-        List<User> chatUsers = chat.getMembers()
-                .stream().filter(i -> i != curentUser)
-                .toList();
-        List<User> invitedUsers = chat.getInvitedMembers();
-
-        return userFriends.stream()
-                .filter(i -> !chatUsers.contains(i))
-                .filter(i -> !invitedUsers.contains(i))
                 .toList();
     }
 
@@ -147,5 +127,13 @@ public class ChatServiceImpl implements ChatService {
             throw new UserNotInChatException();
         }
         return chat;
+    }
+
+    @Override
+    public void checkIfGroup(String id) {
+        Chat chat = this.getChat(id);
+        if(!chat.getGroup()) {
+            throw new NotAGroupException();
+        }
     }
 }

@@ -1,18 +1,15 @@
 package com.example.messagingapp.web;
 
 
-import com.example.messagingapp.model.ClientMessage;
-import com.example.messagingapp.model.Message;
-import com.example.messagingapp.model.ServerMessage;
-import com.example.messagingapp.model.User;
+import com.example.messagingapp.model.*;
+import com.example.messagingapp.model.exceptions.*;
 import com.example.messagingapp.service.ChatService;
+import com.example.messagingapp.service.MessageService;
 import com.example.messagingapp.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -22,10 +19,12 @@ import java.time.format.DateTimeFormatter;
 public class MessageController {
     private final UserService userService;
     private final ChatService chatService;
+    private final MessageService messageService;
 
-    public MessageController(UserService userService, ChatService chatService) {
+    public MessageController(UserService userService, ChatService chatService, MessageService messageService) {
         this.userService = userService;
         this.chatService = chatService;
+        this.messageService = messageService;
     }
 
     @MessageMapping("/send-message/{id}")
@@ -35,9 +34,30 @@ public class MessageController {
     }
 
     @PostMapping({"/chat/{id}"})
-    public void saveMessage(@RequestBody ServerMessage message, @PathVariable String id) {
-        User user = userService.findCurrentUser(message.getSender());
+    public String saveMessage(@RequestBody ServerMessage message, @PathVariable String id, Model model) {
+        User user = null;
+
+        try {
+            user = userService.findCurrentUser(message.getSender());
+        } catch (UserNotLoggedInException | UserDoesntExistException exception) {
+            return exception.getMessage();
+        }
+
         Message messageObj = new Message(message.getBody(), LocalDateTime.now(), user);
-        chatService.saveMessageInChat(messageObj, id);
+        Chat chat = null;
+
+        try {
+            chat = chatService.getChatByUser(id, user);
+        } catch (InvalidArgumentsException | ChatDoesntExistException | UserNotInChatException exception) {
+            return exception.getMessage();
+        }
+
+        try {
+            messageService.saveMessageInChat(messageObj, chat);
+        } catch (InvalidArgumentsException | ChatDoesntExistException exception) {
+            return exception.getMessage();
+        }
+
+        return "";
     }
 }
