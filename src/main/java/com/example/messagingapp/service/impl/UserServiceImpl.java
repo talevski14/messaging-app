@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
         user.getFriends().add(currentUser);
         userRepository.save(currentUser);
         userRepository.save(user);
-        Chat chat = new Chat(currentUser, user);
+        Chat chat = new Chat(List.of(currentUser, user));
         chatRepository.save(chat);
     }
 }

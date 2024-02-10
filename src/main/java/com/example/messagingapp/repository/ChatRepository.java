@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ChatRepository extends JpaRepository<Chat, String> {
-    List<Chat> findAllByUser1OrUser2(User user1, User user2);
+    List<Chat> findAllByMembersContaining(User user);
+    List<Chat> findAllByInvitedMembersContaining(User user);
 }

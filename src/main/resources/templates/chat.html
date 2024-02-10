@@ -7,10 +7,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
 <body>
+<div th:if="${isGroup}">
+    <a th:href="@{'/invite/{id}' (id = ${chatID})}">Invite friends in chat</a>
+    <br>
+</div>
 <input type="hidden" id="username" name="username" th:value="${session.get('user')}">
 <form method="post" th:action="@{'/chat/{id}' (id = ${chatID})}">
-  <input id="message" name="message" type="text" placeholder="Write your message here...">
-  <button id="send" type="submit">Send</button>
+    <input id="message" name="message" type="text" placeholder="Write your message here...">
+    <button id="send" type="submit">Send</button>
 </form>
 <div class="row">
     <div class="col-md-12">
