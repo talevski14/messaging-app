@@ -12,6 +12,7 @@
 <a href="/logout">Log out</a>
 
 <div th:unless="${friendRequests.isEmpty()}">
+    <h2>Friend requests</h2>
     <ul role="list" class="divide-y divide-gray-100" th:each="friendR: ${friendRequests}">
         <li class="flex justify-between gap-x-6 py-5">
             <div class="flex min-w-0 gap-x-4">
@@ -35,11 +36,12 @@
 </div>
 
 <div th:unless="${chats.isEmpty()}">
-<ul role="list" class="divide-y divide-gray-100" th:each="chat: ${chats}">
+    <h2>Chats</h2>
+    <ul role="list" class="divide-y divide-gray-100" th:each="chat: ${chats}">
     <li class="flex justify-between gap-x-6 py-5">
         <div class="flex min-w-0 gap-x-4">
             <div class="min-w-0 flex-auto">
-                <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${chat.getUser1().getUsername() == session.get('user') ? chat.getUser2().getUsername() : chat.getUser1().getUsername()}"></p>
+                <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${chat.getMembers()[0].getUsername() == session.get('user') ? chat.getMembers()[1].getUsername() : chat.getMembers()[0].getUsername()}"></p>
             </div>
             <a th:href="@{'/chat/{id}' (id = ${chat.getId()})}">Open chat</a>
         </div>
@@ -51,5 +53,47 @@
     <p>No current friends. Try searching for them <a href="/find-friends">here!</a></p>
 </div>
 
+<div th:unless="${groupInvites.isEmpty()}">
+    <h2>Group Invites</h2>
+    <ul role="list" class="divide-y divide-gray-100" th:each="invite: ${groupInvites}">
+        <li class="flex justify-between gap-x-6 py-5">
+            <div class="flex min-w-0 gap-x-4">
+                <div class="min-w-0 flex-auto">
+                    <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${invite.getName()}"></p>
+                </div>
+                <form method="post" th:action="@{'/group/accept/{id}' (id = ${invite.getId()})}">
+                    <button type="submit">Accept</button>
+                </form>
+                <form method="post" th:action="@{'/group/decline/{id}' (id = ${invite.getId()})}">
+                    <button type="submit">Decline</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div th:unless="${groups.isEmpty()}">
+    <h2>Groups</h2>
+    <ul role="list" class="divide-y divide-gray-100" th:each="group: ${groups}">
+        <li class="flex justify-between gap-x-6 py-5">
+            <div class="flex min-w-0 gap-x-4">
+                <div class="min-w-0 flex-auto">
+                    <p class="text-sm font-semibold leading-6 text-gray-900" th:text="${group.getName()}"></p>
+                </div>
+                <a th:href="@{'/chat/{id}' (id = ${group.getId()})}">Open chat</a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div th:if="${groups.isEmpty()}">
+    <p>No current groups. Create one here!</p>
+</div>
+
+<form method="post" action="/group/create">
+    <label for="groupName">Group name</label><input type="text" id="groupName" name="groupName">
+    <button type="submit">Create group</button>
+</form>
+<p th:text="${error}" class="mt-10 text-center text-sm text-red-500"></p>
 </body>
 </html>

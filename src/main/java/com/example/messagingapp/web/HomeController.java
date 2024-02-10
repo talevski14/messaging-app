@@ -36,9 +36,13 @@ public class HomeController {
         }
 
         List<Chat> chatList = chatService.findChatsByUser(user);
+        List<Chat> groupList = chatService.findGroupsByUser(user);
+        List<Chat> invitesList = chatService.findGroupsWhereInvited(user);
 
         model.addAttribute("chats", chatList);
         model.addAttribute("friendRequests", user.getFriendRequests());
+        model.addAttribute("groups", groupList);
+        model.addAttribute("groupInvites", invitesList);
 
         return "home";
     }
