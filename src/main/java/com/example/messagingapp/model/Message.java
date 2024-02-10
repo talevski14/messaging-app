@@ -3,6 +3,7 @@ package com.example.messagingapp.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 public class Message {
@@ -48,8 +49,8 @@ public class Message {
         this.body = body;
     }
 
-    public LocalDateTime getTimeSent() {
-        return timeSent;
+    public String getTimeSent() {
+        return timeSent.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
     }
 
     public void setTimeSent(LocalDateTime timeSent) {

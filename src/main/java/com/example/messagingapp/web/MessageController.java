@@ -31,7 +31,7 @@ public class MessageController {
     @MessageMapping("/send-message/{id}")
     @SendTo("/chat/{id}")
     public ClientMessage webSocketMessage(ServerMessage serverMessage, @DestinationVariable String id) {
-        return new ClientMessage(serverMessage.getSender(), serverMessage.getBody(), LocalDateTime.now().toString());
+        return new ClientMessage(serverMessage.getSender(), serverMessage.getBody(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
     }
 
     @PostMapping({"/chat/{id}"})
