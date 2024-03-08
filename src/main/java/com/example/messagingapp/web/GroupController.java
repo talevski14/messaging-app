@@ -68,7 +68,7 @@ public class GroupController {
         List<User> users;
         try {
             users = chatService.searchFriendsNotInChat(usernameToInvite, id, currentUser);
-        } catch (InvalidArgumentsException exception) {
+        } catch (InvalidArgumentsException | ChatDoesntExistException exception) {
             model.addAttribute("error", exception.getMessage());
             return "inviteToChat";
         }
@@ -81,9 +81,10 @@ public class GroupController {
 
     @PostMapping({"/invite/{id}"})
     public String inviteFriends(@RequestParam String friendUsername, Model model, HttpServletRequest request, @PathVariable String id) {
-        Chat chat = chatService.getChat(id);
-        if (!chat.getGroup()) {
-            model.addAttribute("error", "You can't invite people to personal chats. Create a group!");
+        try {
+            chatService.checkIfGroup(id);
+        } catch (InvalidArgumentsException | ChatDoesntExistException | NotAGroupException exception) {
+            model.addAttribute("error", exception.getMessage());
             return "errorPage";
         }
 
@@ -97,7 +98,7 @@ public class GroupController {
 
         try {
             chatService.sendInvite(user, id);
-        } catch (UserAlreadyInvitedException | UserAlreadyInChatException exception) {
+        } catch (InvalidArgumentsException | ChatDoesntExistException | UserAlreadyInvitedException | UserAlreadyInChatException exception) {
             model.addAttribute("error", exception.getMessage());
             return "errorPage";
         }
@@ -118,7 +119,7 @@ public class GroupController {
 
         try {
             chatService.acceptGroupRequest(currentUser, id);
-        } catch (NotAGroupException | UserNotInvitedException exception) {
+        } catch (InvalidArgumentsException | ChatDoesntExistException | NotAGroupException | UserNotInvitedException exception) {
             model.addAttribute("error", exception.getMessage());
             return "errorPage";
         }
@@ -139,7 +140,7 @@ public class GroupController {
 
         try {
             chatService.declineGroupRequest(currentUser, id);
-        } catch (NotAGroupException | UserNotInvitedException exception) {
+        } catch (InvalidArgumentsException | ChatDoesntExistException | NotAGroupException | UserNotInvitedException exception) {
             model.addAttribute("error", exception.getMessage());
             return "errorPage";
         }

@@ -10,11 +10,8 @@ public interface ChatService {
     Chat createGroup(String groupName, User currentUser);
     List<Chat> findChatsByUser(User user);
     Chat getChat(String id);
-    void saveMessageInChat(Message message, String id);
 
     List<Chat> findGroupsByUser(User user);
-
-    List<User> getFriendsNotInChat(User curentUser, String chatId);
 
     void sendInvite(User user, String id);
 
@@ -27,5 +24,6 @@ public interface ChatService {
     void declineGroupRequest(User currentUser, String id);
 
     Chat getChatByUser(String id, User user);
+    void checkIfGroup(String id);
 
 }

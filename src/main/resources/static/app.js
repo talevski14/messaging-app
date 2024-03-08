@@ -11,8 +11,6 @@ usernameEl.parentNode.removeChild(usernameEl);
 
 stompClient.onConnect = (frame) => {
     stompClient.subscribe('/chat/' + id, (message) => {
-        console.log(message)
-        console.log(message.body)
         showGreeting(message.body);
     });
 };
@@ -56,9 +54,7 @@ function sendMessage() {
 }
 
 function showGreeting(messageL) {
-    console.log(messageL)
     let message = JSON.parse(messageL)
-    console.log(message)
     $("#messages").append(
         "<tr><td>" + message.username + "</td><td>" + message.body + "</td><td>" + message.time + "</td></tr>"
     );

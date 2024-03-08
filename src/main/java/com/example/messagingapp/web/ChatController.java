@@ -25,7 +25,7 @@ public class ChatController {
     }
 
     @GetMapping({"/chat/{id}"})
-    public String getChatPage(@PathVariable String id, Model model, HttpServletRequest request, @RequestParam(required = false) String usernameToInvite) {
+    public String getChatPage(@PathVariable String id, Model model, HttpServletRequest request) {
         String username = (String) request.getSession().getAttribute("user");
         User currentUser;
         try {
@@ -38,7 +38,7 @@ public class ChatController {
         Chat chat = null;
         try {
             chat = chatService.getChatByUser(id, currentUser);
-        } catch (ChatDoesntExistException | UserNotInChatException exception) {
+        } catch (InvalidArgumentsException | ChatDoesntExistException | UserNotInChatException exception) {
             model.addAttribute("error", exception.getMessage());
             return "errorPage";
         }
